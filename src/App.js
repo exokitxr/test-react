@@ -23,12 +23,6 @@ const App = props => {
         script.async = false;
         document.body.appendChild(script);
       }
-      else{
-        script.src = `/WebXRApps/avatars-master/${s.attributes && s.attributes.src ? s.attributes.src : ""}`;
-        script.async = false;
-        document.body.appendChild(script);
-
-      }
   })
 })
 
