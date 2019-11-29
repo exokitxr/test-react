@@ -1,37 +1,19 @@
-import React, { useEffect, useState } from 'react';
-// import './App.css';
+import React from 'react';
 import Navbar from './Navbar';
 import WebXRApp from './WebXRApp';
 import AvatarsApp from './WebXRApps/avatars-master/index.html';
-// import BrowserApp from './WebXRApps/exokit-browser-master/index.html';
-
-import { parse } from 'node-html-parser';
-
+import BrowserApp from './WebXRApps/exokit-browser-master/index.html';
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 const App = props => {
-
-  useEffect(() => {
-    const parsedHTML = parse(AvatarsApp);
-    const scripts = parsedHTML.childNodes[0].querySelectorAll('script');
-    console.log("WebXRApp: ", scripts)
-
-    scripts.forEach(s => {
-      console.log("loading:", s.rawAttrs)
-      const script = document.createElement("script");
-      if(s.attributes && s.attributes.src){
-        script.src = `/WebXRApps/avatars-master/${s.attributes && s.attributes.src ? s.attributes.src : ""}`;
-        script.async = false;
-        document.body.appendChild(script);
-      }
-  })
-})
-
   return (
-    <div className="App">
-      {/* <Navbar /> */}
-      <WebXRApp html={{__html: AvatarsApp}} />
-      {/* <WebXRApp html={{__html: BrowserApp}} /> */}
-    </div>
+    <Router>
+      <div className="App">
+        <Route path="/" component={props => <Navbar />} />
+        <Route path="/avatars" component={props => <WebXRApp app={AvatarsApp} appFolder="avatars-master" />} />
+        <Route path="/browser" component={props => <WebXRApp app={BrowserApp} appFolder="exokit-browser-master" />} />
+      </div>
+    </Router>
   );
 }
 
