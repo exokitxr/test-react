@@ -9,10 +9,9 @@ const WebXRApp = props => {
 
       scripts.forEach(s => {
          console.log("loading:", s.rawAttrs)
-         console.log(window.location)
          const script = document.createElement("script");
          if (s.attributes && s.attributes.src) {
-            let src = `${window.location.pathname}WebXRApps/${props.appFolder}/${s.attributes && s.attributes.src ? s.attributes.src : ""}`
+            let src = `${window.location.pathname}WebXRApps/${props.appFolder}/${s.attributes.src}`
             script.type = "module"
             if(s.attributes.src.slice(0, 4) === "http"){
                src = s.attributes && s.attributes.src ? s.attributes.src : ""
