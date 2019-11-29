@@ -14,7 +14,7 @@ const WebXRApp = props => {
             let src = `${window.location.pathname}WebXRApps/${props.appFolder}/${s.attributes.src}`
             script.type = "module"
             if(s.attributes.src.slice(0, 4) === "http"){
-               src = s.attributes && s.attributes.src ? s.attributes.src : ""
+               src = s.attributes.src
                script.type = "async"
             }
             script.src = src;
