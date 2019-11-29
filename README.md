@@ -2,6 +2,6 @@
 
 `npm run start`
 
-/browser
-/avatars
+#/browser
+#/avatars
 
