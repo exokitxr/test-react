@@ -1,0 +1,1166 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="dns-prefetch" href="https://render.exokit.xyz">
+    <link rel=icon type="image/png" href="favicon.png">
+    <meta name="twitter:image:src" content="https://browser.exokit.org/logo.svg">
+    <meta name="twitter:site" content="@exokitxr">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Exokit Browser">
+    <meta name="twitter:description" content="WebXR VR/AR meta-browser. Construct your reality out of 3D web sites.">
+    <meta property="og:title" content="Exokit Browser">
+    <meta property="og:type" content="referenceSpace">
+    <meta property="og:url" content="https://browser.exokit.org/">
+    <meta property="og:image" content="https://browser.exokit.org/logo.svg">
+    <meta http-equiv="origin-trial" content="AspvaSU7F1Gbpa8q9JRNRNXFF+0+77C1xkxf1hkzJCrBI7Mmt/eG25QXLBn7lfzPsgrN5next8ZtIiCeGs6R4w8AAABleyJvcmlnaW4iOiJodHRwczovL2V4b2tpdC5vcmc6NDQzIiwiZmVhdHVyZSI6IldlYlhSRGV2aWNlTTc2IiwiZXhwaXJ5IjoxNTcxMTEyNjU0LCJpc1N1YmRvbWFpbiI6dHJ1ZX0=">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
+    <!-- Google Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-147624282-2', 'auto');
+    ga('send', 'pageview');
+    </script>
+    <!-- End Google Analytics -->
+    <style>
+* {
+  box-sizing: border-box;
+}
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  font-family: 'Open Sans';
+  font-size: 12px;
+  overflow: hidden;
+}
+a {
+  cursor: pointer;
+}
+ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+header {
+  position: absolute;
+  display: flex;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 50px;
+  background-color: #FFF;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+  align-items: center;
+  user-select: none;
+  z-index: 1;
+}
+header .icon {
+  height: 25px;
+  margin: 0 10px;
+}
+header .nav {
+  display: flex;
+  height: 100%;
+  padding: 0 10px;
+  justify-content: center;
+  align-items: center;
+  border-top: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  color: inherit;
+  font-size: 14px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+header .nav:hover, header .nav.open {
+  border-bottom-color: #ef5350;
+}
+header .nav i {
+  display: inline-block;
+  padding: 0 7px;
+  padding-top: 2px;
+}
+input[type=email],
+input[type=text]
+{
+  margin-right: 10px;
+  padding: 7px 15px;
+  background-color: #f2f3f5;
+  border: 0;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+}
+header > .login-form {
+  display: flex;
+  margin-left: auto;
+}
+body.logging-in .login-form,
+header > .login-form:not(.phase-1) > .phase-1-content,
+header > .login-form:not(.phase-2) > .phase-2-content,
+header > .login-form:not(.phase-3) > .phase-3-content,
+header > .login-form.phase-1 > .phaseless-content,
+header > .login-form.phase-2 > .phaseless-content,
+header > .login-form.phase-3 > .phaseless-content
+{
+  display: none;
+}
+.button {
+  display: inline-block;
+  margin-right: 15px;
+  padding: 7px 15px;
+  border: 0;
+  border-radius: 8px;
+  color: #FFF;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+}
+.button.highlight {
+  background-color: #ef5350;
+}
+.button.highlight:hover {
+  background-color: #d32f2f;
+}
+.login-form .phase-content {
+  display: flex;
+  align-items: center;
+}
+.login-form .phase-content .login-error
+{
+  margin-right: 15px;
+  font-weight: 600;
+}
+.login-form .phase-content .user-button {
+  display: flex;
+  height: 30px;
+  margin-right: 10px;
+  padding: 3px 10px;
+  background-color: #f2f3f5;
+  border-radius: 8px;
+  align-items: center;
+  cursor: pointer;
+}
+.login-form .phase-content .user-button:hover,
+.login-form .phase-content .user-button.open {
+  background-color: #CCC;
+}
+.login-form .phase-content .user-button > img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+.login-form .phase-content .user-button > .name {
+  display: flex;
+  height: 100%;
+  font-weight: 600;
+  align-items: center;
+}
+.login-form .phase-content .login-notice {
+  color: #4caf50;
+}
+.login-form .phase-content .login-error {
+  color: #e53935;
+}
+.login-form .phaseless-content {
+  padding: 0 30px;
+}
+.user-account {
+  position: absolute;
+  top: 50px;
+  display: flex;
+  width: 100%;
+  height: 300px;
+  padding: 0 72px;
+  background-color: #FFF;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+  flex-direction: column;
+  z-index: 1;
+}
+.user-account:not(.open) {
+  display: none;
+}
+.user-account .wrap {
+  width: 400px;
+}
+.user-account h1 {
+  margin: 0;
+  margin-bottom: 10px;
+}
+.user-account .row {
+  display: flex;
+  margin: 5px 0;
+  align-items: center;
+}
+.user-account .text {
+  margin-right: 5px;
+}
+.user-account .status {
+  display: flex;
+  padding: 3px 6px;
+  border-radius: 8px;
+  color: #FFF;
+  align-items: center;
+}
+.user-account .status:not(.open) {
+  display: none;
+}
+.user-account .status.not-connected {
+  background-color: #5c6bc0;
+}
+.user-account .status.connected {
+  background-color: #66bb6a;
+}
+.user-account .status nav {
+  display: flex;
+  width: 16px;
+  height: 16px;
+  margin-left: 5px;
+  /* background-color: #ef534e; */
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.user-account .status i {}
+.user-account .connect-stripe-button:not(.visible) {
+  display: none;
+}
+.user-account input[type=text] {
+  width: 300px;
+  padding: 10px;
+  background-color: #f2f3f5;
+  border: 0;
+  border-radius: 8px;
+}
+.user-account input[type=button] {
+  display: flex;
+  margin-left: auto;
+  padding: 10px;
+  background-color: #ef5350;
+  border: 0;
+  border-radius: 8px;
+  color: #FFF;
+  cursor: pointer;
+  outline: none;
+}
+.user-account input[type=button]:hover {
+  background-color: #d32f2f;
+}
+.multibutton {
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
+  display: flex;
+}
+.multibutton > .button {
+  margin-right: 5px;
+}
+.multibutton > .button {
+  display: inline-flex;
+  padding: 8px 20px;
+  border: 2px solid;
+  border-radius: 100px;
+  color: #5c6bc0;
+  cursor: pointer;
+}
+.multibutton > .button:not(.first) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.multibutton > .button:not(.last) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.multibutton  .button:not([disabled]):hover {
+  background-color: #5c6bc0;
+  border-color: #5c6bc0;
+  color: #FFF;
+}
+.multibutton .button[disabled] {
+  color: #b71c1c;
+  cursor: auto;
+}
+header .popup {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 60px;
+  right: 20px;
+  width: 500px;
+  padding: 20px;
+  background-color: #444;
+  border: 2px solid rgba(0,0,0,0.5);
+  color: #FFF;
+
+  display: none;
+}
+header .popup::before {
+  position: absolute;
+  top: -20px;
+  right: 150px;
+  border-width: 0 0 20px 20px;
+  border-style: solid;
+  border-color: transparent;
+  border-bottom-color: #444;
+  content: ''
+}
+header .close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 20px;
+  color: #FFF;
+  text-decoration: none;
+}
+header .popup h1 {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  font-size: 50px;
+  line-height: 55px;
+  font-weight: 600;
+  color: rgba(255,255,255,1);
+}
+header .popup strong {
+  font-size: 14px;
+  line-height: 1.1;
+  color: #ef5350;
+  text-transform: uppercase;
+}
+header .popup p {
+  margin-top: 20px;
+  margin-bottom: 40px;
+  font-size: 20px;
+  line-height: 30px;
+  color: rgba(255,255,255,0.5);
+}
+header .popdown {
+  flex-direction: column;
+  padding: 10px;
+  /* border: 2px solid rgba(0,0,0,0.5); */
+  color: #FFF;
+}
+body:not(.logged-in) #enter-buttons
+{
+  display: none;
+}
+#login-blocker {
+  display: none;
+}
+body:not(.logging-in):not(.logged-in) #login-blocker {
+  display: flex;
+}
+.blocker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  user-select: none;
+}
+.blocker .wrap {
+  width: 300px;
+  padding: 50px;
+  background-color: #FFF;
+  border-radius: 8px;
+  text-align: center;
+}
+/* .blocker .wrap i {
+  position: absolute;
+  top: 0;
+  right: 0;
+} */
+.blocker .wrap img {
+  width: 100px;
+  height: 100px;
+}
+.blocker .wrap h1, .blocker .wrap h2, .blocker .wrap h3 {
+  margin: 0;
+  /* font-weight: 300; */
+}
+.blocker .wrap .button {
+  margin: 10px 0;
+}
+.blocker a {
+  color: #42a5f5;
+  text-decoration: none;
+}
+.blocker a:hover {
+  color: #1e88e5;
+}
+#controls-popdown {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 35vw;
+  padding: 15px;
+  background-color: #FFF;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+  color: black;
+  font-size: 12px;
+  border-top: 2px solid #000;
+}
+#subscribe-popdown {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 100vw;
+  padding: 30px;
+  background-color: rgba(33,33,33,1);
+  border-top: 2px solid #141414;
+}
+#subscribe-popdown .plans {
+  display: flex;
+  margin-bottom: 20px;
+}
+#subscribe-popdown .plans .plan {
+  display: flex;
+  width: 180px;
+  padding: 30px;
+  margin: 10px;
+  flex-direction: column;
+  border: 2px solid;
+  border-radius: 10px;
+  color: #444;
+  cursor: pointer;
+  align-items: center;
+}
+#subscribe-popdown .plans .plan:hover {
+  color: #666;
+}
+#subscribe-popdown .plans .plan.selected {
+  color: #5c6bc0;
+}
+#subscribe-popdown .plans .plan i {
+  margin-bottom: 10px;
+  font-size: 70px;
+}
+#subscribe-popdown .plans .plan .wrap {
+  display: flex;
+  flex-direction: column;
+}
+/* #subscribe-popdown .plans h3 {
+  margin: 0;
+  font-size: 30px;
+}
+#subscribe-popdown .plans strong {
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+#subscribe-popdown .plans p {
+  margin: 0;
+  line-height: 1.4;
+} */
+#developers-popdown {
+  position: absolute;
+  display: flex;
+  top: 50px;
+  left: 380px;
+  width: 300px;
+  background-color: #444;
+}
+header .popdown:not(.open) {
+  display: none !important;
+}
+header .popdown ul {
+  font-size: 14px;
+  line-height: 2;
+}
+header .popdown li {
+  margin: 10px 0;
+}
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000;
+}
+table {
+  width: 100%;
+}
+table colgroup col:nth-child(1) {
+  width: 20%;
+}
+table colgroup col:nth-child(3) {
+  width: 60%;
+}
+table tr {
+  background-color: #f2f3f5;
+}
+    </style>
+  </head>
+  <body class=logging-in>
+    <header id=header>
+      <a href="https://browser.exokit.org">
+        <img class=icon src="logo.svg"/>
+      </a>
+      <a href="/" class="nav" id="explore-dropdown">Exobrowser</a>
+      <a class="nav" id="controls-dropdown">Controls</a>
+      <div class="popdown" id="controls-popdown">
+        <table>
+          <colgroup>
+            <col>
+            <col>
+            <col>
+          </colgroup>  
+          <tbody>
+          <tr>
+            <td>KEY/BUTTON</td>
+            <td>ACTION</td>
+            <td>DESCRIPTION</td>
+          </tr>
+          <tr>
+            <td><b>Enter XR</b></td>
+            <td>XR Mode</td>
+            <td>If you are using a headset or have one plugged in, you can view through your headset.</td>
+          </tr>
+          <tr>
+            <td><b>Enter 2D</b></td>
+            <td>2D Mode</td>
+            <td>Emulate an XR device with keyboard/mouse. Alternatively, double click to enter 2D.</td>
+          </tr>
+          <tr>
+            <td><b>LMB</b></td>
+            <td>Gamepad trigger</td>
+            <td>Click the right gamepad's trigger.</td>
+          </tr>
+          <tr>
+            <td><b>MMB</b></td>
+            <td>Gamepad touch</td>
+            <td>Press the right gamepad's touchpad/thumb stick.</td>
+          </tr>
+          <tr>
+            <td><b>Tab</b></td>
+            <td>Toggle edit</td>
+            <td>Toggle edit mode which lets you add, move, and delete apps from your scene.</td>
+          </tr>
+          <tr>
+            <td><b>DEL</b></td>
+            <td>Delete app</td>
+            <td>Delete the currently selected opened app.</td>
+          </tr>
+          <tr>
+            <td><b>ESC</b></td>
+            <td>Exit 2D</td>
+            <td>This is useful if you want to type with your keyboard.</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- <a class="nav" id="explore-dropdown">Explore</a>
+      <a class="nav">Download</a>
+      <a class="nav" id="developers-dropdown">Developers<i class="fal fa-chevron-down"></i></a> -->
+      <form class="login-form phase-1" id=login-form>
+        <div class=phase-content>
+          <div class=login-notice id=login-notice></div>
+          <div class=login-error id=login-error></div>
+        </div>
+        <div class="phase-content phase-1-content">
+          <input type=email placeholder="your@email.com" id=login-email>
+          <input type=submit value="Log in" class="button highlight">
+        </div>
+        <div class="phase-content phase-2-content">
+          <input type=text placeholder="Verification code" id=login-verification-code>
+          <input type=submit value="Verify" class="button highlight">
+        </div>
+        <div class="phase-content phase-3-content">
+          <nav class=user-button id=user-button>
+            <img src="exobot.png">
+            <span class=name id=login-email-static>a@modules.io</span>
+          </nav>
+          <input type=submit value="Log out" class="button highlight">
+        </div>
+        <div class="phase-content phaseless-content">
+          <div>Working...</div>
+        </div>
+      </form>
+      <div class=user-account id=user-account>
+        <div class=wrap>
+          <h1 id=login-name-static></h1>
+          <div class=row>
+            <input type=text placeholder="Enter WebXR URL" id=site-url-bar>
+            <input type=button value="Submit Site" id=submit-site>
+          </div>
+          <div class=row>
+            <div class=text>Stripe Connect status:</div>
+            <div class="status not-connected" id=status-not-connected>Not connected</div>
+            <div class="status connected" id=status-connected>Connected <nav id=disconnect-stripe-button><i class="fal fa-times"></i></nav></div>
+            <input type=button value="Connect Stripe" class=connect-stripe-button id=connect-stripe-button>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="popdown" id="developers-popdown">
+        <ul>
+          <li>CLI</li>
+          <li>SDK</li>
+        </ul>
+      </div> -->
+    </header>
+
+    <div class=blocker id=login-blocker>
+      <div class=wrap>
+        <img class=icon src="logo.svg"/>
+        <h1>Yo!</h1>
+        <h3>This beta requires login.<br>Get an invite in <a href="https://discordapp.com/invite/Apk6cZN">Discord</a></h3>
+      </div>
+    </div>
+
+    <div class=multibutton id=enter-buttons>
+      <nav class="button first" id="enter-2d-button">Enter 2D</nav>
+      <a class="button last" id="enter-xr-button" style="display: none;">Enter XR</a>
+      <a class="button last" id="no-xr-button" disabled style="display: none;">No XR</a>
+    </div>
+
+    <script src="https://kit.fontawesome.com/0735724151.js"></script>
+    <script type=module>
+const LAMBDA_URLS = {
+  login: `https://login.exokit.org/`,
+  token: `https://token.exokit.org/token`,
+  tokens: `https://token.exokit.org/tokens`,
+  coords: `https://token.exokit.org/coords`,
+  presence: `wss://presence.exokit.org/`,
+};
+function parseQuery(s) {
+  var query = {};
+  var pairs = (s[0] === '?' ? s.substr(1) : s).split('&');
+  for (var i = 0; i < pairs.length; i++) {
+    var pair = pairs[i].split('=');
+    query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+  }
+  return query;
+}
+async function doLogin(email, code) {
+  const res = await fetch(LAMBDA_URLS.login + `?email=${encodeURIComponent(email)}&code=${encodeURIComponent(code)}`, {
+    method: 'POST',
+  });
+  if (res.status >= 200 && res.status < 300) {
+    const newLoginToken = await res.json();
+
+    await storage.set('loginToken', newLoginToken);
+
+    loginToken = newLoginToken;
+
+    loginNameStatic.innerText = loginToken.name;
+    loginEmailStatic.innerText = loginToken.email;
+    if (loginToken.stripeConnectState) {
+      statusConnected.classList.add('open');
+      statusNotConnected.classList.remove('open');
+      connectStripeButton.classList.remove('visible');
+    } else {
+      statusNotConnected.classList.add('open');
+      statusConnected.classList.remove('open');
+      connectStripeButton.classList.add('visible');
+    }
+
+    document.body.classList.add('logged-in');
+    loginForm.classList.remove('phase-1');
+    loginForm.classList.remove('phase-2');
+    loginForm.classList.add('phase-3');
+
+    return true;
+  } else {
+    return false;
+  }
+}
+const storage = {
+  async get(k) {
+    const res = await fetch(`/.s/${k}`);
+    if (res.status >= 200 && res.status < 300) {
+      const s = await res.text();
+      return JSON.parse(s);
+    } else {
+      return undefined;
+    }
+  },
+  async set(k, v) {
+    const res = await fetch(`/.s/${k}`, {
+      method: 'PUT',
+      body: JSON.stringify(v),
+    });
+    if (res.status >= 200 && res.status < 300) {
+      // nothing
+    } else {
+      throw new Error(`invalid status code: ${res.status}`);
+    }
+  },
+  async remove(k) {
+    const res = await fetch(`/.s/${k}`, {
+      method: 'DELETE',
+    });
+    if (res.status >= 200 && res.status < 300) {
+      // nothing
+    } else {
+      throw new Error(`invalid status code: ${res.status}`);
+    }
+  },
+};
+
+let xrEngine;
+let loginToken = null;
+const q = parseQuery(window.location.search);
+const {key} = q;
+import(`https://web.exokit.org/ew.js${key ? `?key=${encodeURIComponent(key)}` : ''}`)
+// import(`./exokit-web/ew.js${key ? `?key=${encodeURIComponent(key)}` : ''}`)
+  .then(async () => {
+    if (navigator.serviceWorker.controller) { // avoid FOUC during reload
+      // xrEngine = document.createElement('xr-engine');
+      xrEngine = new XREngine();
+      xrEngine.src = 'app.html';
+      xrEngine.addEventListener('message', async e => {
+        const {data} = e;
+        const {method} = data;
+        if (method === 'loadScene') {
+          const res = await fetch('/.s/scene');
+          if (res.status >= 200 && res.status < 300) {
+            const html = await res.text();
+            xrEngine.postMessage({
+              method: 'loadScene',
+              html,
+            });
+          } else if (res.status === 404) {
+            xrEngine.postMessage({
+              method: 'loadScene',
+              html: null,
+            });
+          } else {
+            console.warn(`invalid status code: ${res.status}`);
+          }
+        } else if (method === 'saveScene') {
+          const {html} = data;
+          const res = await fetch('/.s/scene', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'text/html',
+            },
+            body: html,
+          });
+          if (res.status >= 200 && res.status < 300) {
+            // nothing
+          } else {
+            console.warn(`invalid status code: ${res.status}`);
+          }
+        }
+      });
+      document.body.appendChild(xrEngine);
+
+      const {email, code} = q;
+      if (email && code && await doLogin(email, code)) {
+        delete q.email;
+        delete q.code;
+        window.location.search = '?' + Object.keys(q).map(k => encodeURIComponent(k) + '=' + encodeURIComponent(q[k])).join('&');
+        return;
+      }
+
+      const localLoginToken = await storage.get('loginToken');
+      if (localLoginToken) {
+        const res = await fetch(LAMBDA_URLS.login + `?email=${encodeURIComponent(localLoginToken.email)}&token=${encodeURIComponent(localLoginToken.token)}`, {
+          method: 'POST',
+        })
+        if (res.status >= 200 && res.status < 300) {
+          loginToken = await res.json();
+
+          await storage.set('loginToken', loginToken);
+
+          loginNameStatic.innerText = loginToken.name;
+          loginEmailStatic.innerText = loginToken.email;
+          if (loginToken.stripeConnectState) {
+            statusConnected.classList.add('open');
+            statusNotConnected.classList.remove('open');
+            connectStripeButton.classList.remove('visible');
+          } else {
+            statusNotConnected.classList.add('open');
+            statusConnected.classList.remove('open');
+            connectStripeButton.classList.add('visible');
+          }
+
+          ga('create', 'UA-147624282-1', {
+            'clientId': loginToken.email,
+          });
+          ga('send', 'event', 'Login', 'finished', 'Exokit Browser');
+
+          document.body.classList.add('logged-in');
+          loginForm.classList.remove('phase-1');
+          loginForm.classList.remove('phase-2');
+          loginForm.classList.add('phase-3');
+        } else {
+          await storage.remove('loginToken');
+
+          console.warn(`invalid status code: ${res.status}`);
+        }
+      }
+
+      xrEngine.postMessage({
+        method: 'login',
+        loginToken,
+      });
+
+      const {u, j} = q;
+      if (u) {
+        xrEngine.postMessage({
+          method: 'loadScene',
+          html: `<xr-site><xr-iframe src="${u}"></xr-iframe></xr-site>`,
+        });
+      }
+      if (j) {
+        const channelName = j;
+        xrEngine.postMessage({
+          method: 'joinChannel',
+          channelName,
+        });
+      }
+
+      let result;
+      if (navigator.xr) {
+        try {
+          await navigator.xr.supportsSession('immersive-vr');
+          result = true;
+        } catch (err) {
+          result = false;
+        }
+      } else {
+        result = false;
+      }
+      if (result) {
+        console.log('xr available');
+        document.getElementById('enter-xr-button').style.display = null;
+      } else {
+        console.log('no xr');
+        document.getElementById('no-xr-button').style.display = null;
+      }
+
+      document.body.classList.remove('logging-in');
+    }
+  })
+  .catch(err => {
+    console.warn(err);
+  });
+
+// const loginButton = document.getElementById('login-button');
+// const loginButton2 = document.getElementById('login-button-2');
+// const loginPopdown = document.getElementById('login-popdown');
+const loginForm = document.getElementById('login-form');
+const loginEmail = document.getElementById('login-email');
+const loginNameStatic = document.getElementById('login-name-static');
+const loginEmailStatic = document.getElementById('login-email-static');
+const statusNotConnected = document.getElementById('status-not-connected');
+const statusConnected = document.getElementById('status-connected');
+const loginVerificationCode = document.getElementById('login-verification-code');
+const loginNotice = document.getElementById('login-notice');
+const loginError = document.getElementById('login-error');
+const logoutButton = document.getElementById('logout-button');
+const controlsDropdown = document.getElementById('controls-dropdown');
+const controlsPopdown = document.getElementById('controls-popdown');
+controlsDropdown.onclick = () => {
+  controlsDropdown.classList.toggle('open');
+  controlsPopdown.classList.toggle('open');
+};
+/* [loginButton, loginButton2].forEach(b => {
+  b.onclick = () => {
+    loginPopdown.classList.toggle('open');
+  };
+});
+logoutButton.onclick = async () => {
+  await storage.remove('loginToken');
+
+  loginToken = null;
+  xrEngine.postMessage({
+    method: 'login',
+    loginToken,
+  });
+  document.body.classList.remove('logged-in');
+}; */
+loginForm.onsubmit = async e => {
+  e.preventDefault();
+
+  if (loginForm.classList.contains('phase-1') && loginEmail.value) {
+    loginNotice.innerHTML = '';
+    loginError.innerHTML = '';
+    loginForm.classList.remove('phase-1');
+
+    const res = await fetch(LAMBDA_URLS.login + `?email=${encodeURIComponent(loginEmail.value)}`, {
+      method: 'POST',
+    })
+    if (res.status >= 200 && res.status < 300) {
+      loginNotice.innerText = `Code sent to ${loginEmail.value}!`;
+      loginForm.classList.add('phase-2');
+
+      return res.blob();
+    } else if (res.status === 403) {
+      loginError.innerText = `${loginEmail.value} is not in the beta yet :(`;
+
+      loginForm.classList.add('phase-1');
+    } else {
+      throw new Error(`invalid status code: ${res.status}`);
+    }
+  } else if (loginForm.classList.contains('phase-2') && loginEmail.value && loginVerificationCode.value) {
+    loginNotice.innerHTML = '';
+    loginError.innerHTML = '';
+    loginForm.classList.remove('phase-2');
+
+    if (await doLogin(loginEmail.value, loginVerificationCode.value)) {
+      xrEngine.postMessage({
+        method: 'login',
+        loginToken,
+      });
+    }
+  } else if (loginForm.classList.contains('phase-3')) {
+    await storage.remove('loginToken');
+
+    window.location.reload();
+
+    /* loginToken = null;
+    xrEngine.postMessage({
+      method: 'login',
+      loginToken,
+    });
+
+    loginNotice.innerHTML = '';
+    loginError.innerHTML = '';
+    document.body.classList.remove('logged-in');
+    loginForm.classList.remove('phase-3');
+    loginForm.classList.add('phase-1'); */
+  }
+};
+
+const enter2dButton = document.getElementById('enter-2d-button');
+enter2dButton.addEventListener('click', () => {
+  xrEngine.postMessage({
+    method: 'enter2d',
+  });
+});
+const enterXrButton = document.getElementById('enter-xr-button');
+enterXrButton.addEventListener('click', () => {
+  xrEngine.enterXr();
+});
+
+// const exploreLabel = document.getElementById('explore-label');
+// const exploreContent = document.getElementById('explore-content');
+const _getCoordsFromBindingUrl = bindingUrl => {
+  const match = bindingUrl.match(/^\/\?c=(-?[0-9\.]+),(-?[0-9\.]+)$/);
+  if (match) {
+    const x = parseFloat(match[1]);
+    const z = parseFloat(match[2]);
+    if (isFinite(x) && isFinite(z)) {
+      return [x, z];
+    } else {
+      return null;
+    }
+  } else {
+    return null;
+  }
+};
+const _makeElement = html => {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.children[0];
+};
+const _getAppType = mimeType => {
+  if (/^img\//.test(mimeType)) {
+    return 'image';
+  } else if (/^audio\//.test(mimeType)) {
+    return 'audio';
+  } else if (/^video\//.test(mimeType)) {
+    return 'video';
+  } else if (/^model\//.test(mimeType)) {
+    return 'model';
+  } else if (/^text\/html\+webgl$/.test(mimeType)) {
+    return 'webgl';
+  } else if (/^text\/html$/.test(mimeType)) {
+    return 'html';
+  } else {
+    return null;
+  }
+};
+const _renderItems = items => {
+  const el = _makeElement(`<ul>
+    ${items.map((item, index) => {
+      const {type} = item;
+      const coords = _getCoordsFromBindingUrl(item.bindingUrl);
+      return `<li>
+
+        <a id=img-${index+1}><img src="skin.png"></a>
+        <div class=tag>
+        ${(() => {
+            switch (_getAppType(item.type)) {
+              case 'image': return `<i class="fal fa-image"></i>`;
+              case 'audio': return `<i class="fal fa-volume-up"></i>`;
+              case 'video': return `<i class="fal fa-film"></i>`;
+              case 'model': return `<i class="fal fa-dice-d4"></i>`;
+              case 'webgl': return `<i class="fal fa-gamepad"></i>`;
+              case 'html':
+              default: return `<i class="fal fa-link"></i>`;
+            }
+          })()}
+        </div>
+        <div class=wrap>
+          <h3>
+            <a class="a-content" href="${item.url}" id=name-${index+1}>${item.name}</a>
+            <div class=controls>
+              <a id=control-edit-${index+1}><i class="fal fa-pencil"></i></a>
+              <a id=control-move-${index+1}><i class="fal fa-crosshairs"></i></a>
+              <a id=control-delete-${index+1}><i class="fal fa-trash-alt"></i></a>
+            </div>
+          </h3>
+          <p><a id=owner-${index+1}><i class="fas fa-user"></i> ${item.addr.slice(0, 12)}</a> ${coords ? `<a class="a-binding" href="/?c=${coords.join(',')}" id=binding-${index+1}>at ${coords.join(',')}</a>` : `<a class="a-binding" id=binding-${index+1}><i class="fas fa-map-marker"></i> not bound</a>`}</p>
+        </div>
+      </li>`;
+    }).join('')}
+  </ul>`);
+  const aBindings = el.querySelectorAll('.a-binding');
+  for (let i = 0; i < aBindings.length; i++) {
+    const a = aBindings[i];
+    a.onclick = e => {
+      e.preventDefault();
+
+      history.pushState({}, a.href, a.href);
+      _updateCoord();
+    };
+  }
+  return el;
+};
+const _renderGamers = gamers => {
+  const el = _makeElement(`<ul>
+    ${gamers.map(gamer => {
+      const {coords} = gamer;
+      return `<li>
+        <a id=img><img src="skin.png"></a>
+        <div class=wrap>
+          <h3>
+            <a class="a-content" href="${gamer.name}" id=name>${gamer.name}</a>
+          </h3>
+          <p><a class="a-binding" href="/?c=${coords.join(',')}" id=coord><i class="fas fa-map-marker"></i> at ${coords.join(',')}</a></p>
+        </div>
+      </li>`;
+    }).join('')}
+  </ul>`);
+  const aBindings = el.querySelectorAll('.a-binding');
+  for (let i = 0; i < aBindings.length; i++) {
+    const a = aBindings[i];
+    a.onclick = e => {
+      e.preventDefault();
+
+      history.pushState({}, a.href, a.href);
+      _updateCoord();
+    };
+  }
+  return el;
+};
+/* const _updateTabs = async () => {
+  if (currentExploreTab === 1) {
+    const c = renderer.vr.enabled ? renderer.vr.getCamera(camera) : camera;
+    const coords = [Math.floor((c.position.x + PARCEL_SIZE/2)/PARCEL_SIZE), Math.floor((c.position.z + PARCEL_SIZE/2)/PARCEL_SIZE)];
+    const u = `${LAMBDA_URLS.coords}/${coords[0]}/${coords[1]}`;
+
+    explorePopdown.classList.add('loading');
+
+    const items = await fetch(u)
+      .then(res => res.json())
+      .catch(err => {
+        console.warn(err.stack);
+      });
+
+    exploreLabel.innerText = 'Nearby';
+    exploreContent.innerHTML = '';
+    exploreContent.appendChild(_renderItems(items));
+    explorePopdown.classList.remove('loading');
+  } else if (currentExploreTab === 2) {
+    const u = `${LAMBDA_URLS.tokens}/${encodeURIComponent(loginToken.addr)}`;
+
+    explorePopdown.classList.add('loading');
+
+    const items = await fetch(u)
+      .then(res => res.json())
+      .catch(err => {
+        console.warn(err.stack);
+      });
+
+    exploreLabel.innerText = 'Inventory';
+    exploreContent.innerHTML = '';
+    exploreContent.appendChild(_renderItems(items));
+    explorePopdown.classList.remove('loading');
+  } else if (currentExploreTab === 3) {
+    exploreLabel.innerText = 'Gamers';
+    exploreContent.innerHTML = '';
+    exploreContent.appendChild(_renderGamers([{
+      name: 'Avaer',
+      coords: [1.234, 2.567],
+    }]));
+    explorePopdown.classList.remove('loading');
+  } else if (currentExploreTab === 4) {
+    exploreLabel.innerText = '';
+    exploreContent.innerHTML = '';
+    exploreContent.appendChild(_makeElement(`<div class=url>
+      <input type="text" placeholder="https://" id=url-input>
+      <a id=go><i class="fal fa-plus-square"></i></a>
+    </div>`));
+    explorePopdown.classList.remove('loading');
+  } else {
+    // nothing
+  }
+}; */
+
+/* const developersDropdown = document.getElementById('developers-dropdown');
+const developersPopdown = document.getElementById('developers-popdown');
+developersDropdown.onclick = () => {
+  developersDropdown.classList.toggle('open');
+  developersPopdown.classList.toggle('open');
+}; */
+
+const _stopPropagation = e => {
+  e.stopPropagation();
+};
+const header = document.getElementById('header');
+header.addEventListener('mousedown', _stopPropagation);
+header.addEventListener('dblclick', _stopPropagation);
+
+const submitSiteUrlBar = document.getElementById('site-url-bar');
+const submitSiteButton = document.getElementById('submit-site');
+submitSiteButton.addEventListener('click', () => {
+  if (/^https:\/\//.test(submitSiteUrlBar.value)) {
+    const url = submitSiteUrlBar.value;
+    window.location.href = `https://github.com/exokitxr/exoland/issues/new?title=${encodeURIComponent(`[ADD-WORLD] ${url}`)}&assignee=modulesio&labels=add-world&body=${encodeURIComponent('URL to add:\n\n```' + url + '```')}`;
+  } else {
+    console.warn('only https sites are supported: ' + submitSiteUrlBar.value);
+  }
+});
+const connectStripeButton = document.getElementById('connect-stripe-button');
+connectStripeButton.addEventListener('click', () => {
+  window.location.href = `https://payments.exokit.org/authorize?email=${encodeURIComponent(loginToken.email)}&token=${encodeURIComponent(loginToken.token)}&redirectUrl=${window.location.href}`;
+});
+const disconnectStripeButton = document.getElementById('disconnect-stripe-button');
+disconnectStripeButton.addEventListener('click', () => {
+  const {email, token} = loginToken;
+  fetch(`https://payments.exokit.org/untoken?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`)
+    .then(async res => {
+      if (res.status >= 200 && res.status < 300) {
+        loginToken.stripeConnectState = false;
+        statusNotConnected.classList.add('open');
+        statusConnected.classList.remove('open');
+        connectStripeButton.classList.add('visible');
+
+        await storage.set('loginToken', loginToken);
+      } else {
+        console.warn('invalid status code', res.status);
+      }
+    });
+});
+
+const userButton = document.getElementById('user-button');
+const userAccount = document.getElementById('user-account');
+userButton.addEventListener('click', () => {
+  userButton.classList.toggle('open');
+  userAccount.classList.toggle('open');
+});
+    </script>
+  </body>
+</html>
