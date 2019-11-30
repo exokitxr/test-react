@@ -1,14 +1,22 @@
 import React from 'react';
 import './App.css';
+import { Link } from 'react-router-dom'
 
 const Navbar = props => {
   return (
     <header>
       <img src="logo.svg" className="icon" alt="logo" />
-      <nav className="selected"><span>Avatars</span></nav>
+      <Link to="/avatars">
+        <nav className="selected" style={{"cursor": "pointer"}}>
+          <span>Avatars</span>
+        </nav>
+      </Link>
       <a href="https://docs.exokit.org/"><nav><span className="header-link">Documentation</span></nav></a>
-      <a href="https://browser.exokit.org"><nav><span className="header-link">Browser
-        </span></nav></a>
+      <Link to="/browser">
+        <nav>
+          <span className="header-link">Browser</span>
+        </nav>
+      </Link>
       <a href="https://discord.gg/UgZDFZW"><nav><span className="coming-soon">Exoland
           <p className="coming-soon-sub">Coming soon!</p>
       </span></nav></a>

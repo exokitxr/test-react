@@ -6,6 +6,7 @@ import BrowserApp from './WebXRApps/exokit-browser-master/index.html';
 import { HashRouter as Router, Route } from "react-router-dom";
 
 const App = props => {
+  console.log(window.location)
   return (
     <Router>
       <div className="App">
